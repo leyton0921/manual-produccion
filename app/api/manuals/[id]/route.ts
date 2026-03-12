@@ -9,14 +9,23 @@ export async function DELETE(
 
   const { id } = await context.params
 
-  await prisma.manual.delete({
-    where: {
-      id: id
-    }
-  })
+  try {
 
-  return NextResponse.json({
-    message: "Manual eliminado"
-  })
+    await prisma.manual.delete({
+      where: { id }
+    })
+
+    return NextResponse.json({
+      message: "Manual eliminado"
+    })
+
+  } catch (error) {
+
+    return NextResponse.json(
+      { error: "Error eliminando manual" },
+      { status: 500 }
+    )
+
+  }
 
 }
