@@ -1,0 +1,28 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+model Area {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  qrCode      String?
+  createdAt   DateTime @default(now())
+
+  manuals Manual[]
+}
+
+model Manual {
+  id        String   @id @default(uuid())
+  title     String
+  fileUrl   String
+  fileType  String?
+  areaId    String
+  createdAt DateTime @default(now())
+
+  area Area @relation(fields: [areaId], references: [id])
+}
