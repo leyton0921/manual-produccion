@@ -1,26 +1,17 @@
 import { prisma } from "@/lib/prisma"
 import { NextResponse } from "next/server"
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/lib/auth"
+import { NextRequest } from "next/server"
 
 export async function DELETE(
-  request: Request,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  context: { params: Promise<{ id: string }> }
 ) {
 
-  const session = await getServerSession(authOptions)
-
-  // verificar si es admin
-  if (!session || session.user.role !== "admin") {
-    return NextResponse.json(
-      { error: "No autorizado" },
-      { status: 401 }
-    )
-  }
+  const { id } = await context.params
 
   await prisma.manual.delete({
     where: {
-      id: params.id
+      id: id
     }
   })
 
